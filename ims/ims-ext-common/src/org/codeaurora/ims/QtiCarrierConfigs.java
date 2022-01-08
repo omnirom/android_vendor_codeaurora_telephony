@@ -1,4 +1,4 @@
-/* Copyright (c) 2016, 2020 The Linux Foundation. All rights reserved.
+/* Copyright (c) 2016, 2020-2021 The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -115,4 +115,40 @@ public class QtiCarrierConfigs {
      */
     public static final String KEY_CARRIER_CALL_COMPOSER_SUPPORTED =
             "carrier_call_composer_supported_bool";
+
+    /* Config to determine if Carrier supports video CRS
+     * true - if video CRS is support else false
+     */
+    public static final String KEY_CARRIER_VIDEO_CRS_SUPPORTED =
+            "carrier_video_crs_supported_bool";
+
+    /* Config to determine if Carrier supports video CRBT
+     * true - if video CRBT is support else false
+     */
+    public static final String KEY_CARRIER_VIDEO_CRBT_SUPPORTED =
+            "config_enable_video_crbt";
+
+    /* Config to determine if Carrier supports showing call progress notiication during alerting.
+     * true - if call progress notification is supported else false
+     */
+    public static final String KEY_CARRIER_CALL_PROGRESS_NOTIFICATION_SUPPORTED =
+            "carrier_call_progress_notification";
+
+    /* List of numbers that should be treated as customer service numbers.
+     * Number list are whitelisted in carrier config file, more numbers could
+     * be added, below is format.
+     * <string-array name="carrier_support_video_service_numbers" num="2">
+     *     <item value="0532100860086"/>
+     *     <item value="0201008616"/>
+     * </string-array>
+     */
+    public static final String KEY_CARRIER_VIDEO_CUSTOMER_SERVICE_NUMBERS =
+        "carrier_support_video_service_numbers";
+
+    /* Config to determine if Carrier supports set media config (screen size and max avc and
+     * hevc resolution) to modem.
+     * true - if set media config is supported else false.
+     */
+    public static final String KEY_CARRIER_SEND_MEDIA_CONFIG_SUPPORTED =
+        "carrier_support_send_media_configs_to_radio_layer_bool";
 }

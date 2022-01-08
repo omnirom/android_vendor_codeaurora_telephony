@@ -1,4 +1,4 @@
-/* Copyright (c) 2016, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2021, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -25,22 +25,34 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.codeaurora.ims;
+
+package org.codeaurora.ims.internal;
+
 
 /**
- * This class is to handle custom unsupported image format exception
+ * Used by client application to get the result from lower layer by
+ * communicating with vendor.
+ * {@hide}
  */
-public class QtiImsUnsupportedImageFormatException extends QtiImsException {
+oneway interface ICrsCrbtListener {
 
-    public QtiImsUnsupportedImageFormatException() {
-        // Empty constructor
-    }
+   /**
+    * Notifies client when crsType/hideInCallUi is changed from vendor.
+    *
+    * @param  phoneId indicates the phone instance which triggered the request
+    * @param  crsType/isPreparatory – update crs type and silenceUi from vendor.
+    *
+    * @return void.
+    */
+   void onCrsDataUpdated(int phoneId, int crsType, boolean isPreparatory);
 
-    public QtiImsUnsupportedImageFormatException(String message) {
-        super(message);
-    }
-
-    public QtiImsUnsupportedImageFormatException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    /**
+     * Notifies client when SIP DTMF config string is received
+     *
+     * @param  phoneId indicates the phone instance which triggered the request
+     * @param  configCode - SIP DTMP config string that be parsed from xml by modem.
+     *
+     * @return void.
+     */
+    void onSipDtmfReceived(int phoneId, String configCode);
 }

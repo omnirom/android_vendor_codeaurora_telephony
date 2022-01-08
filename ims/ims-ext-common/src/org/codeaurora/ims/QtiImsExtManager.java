@@ -1,4 +1,4 @@
-/* Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2016-2021, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -38,6 +38,7 @@ import android.telephony.ims.stub.ImsConfigImplBase;
 
 import java.util.ArrayList;
 
+import org.codeaurora.ims.internal.ICrsCrbtController;
 import org.codeaurora.ims.internal.IQtiImsExt;
 import org.codeaurora.ims.internal.IQtiImsExtListener;
 import org.codeaurora.ims.internal.IImsMultiIdentityInterface;
@@ -363,4 +364,63 @@ public class QtiImsExtManager {
         checkPhoneId(phoneId);
         checkFeatureStatus(phoneId);
     }
+
+    public CrsCrbtManager createCrsCrbtManager(int phoneId)
+            throws QtiImsException {
+        validateInvariants(phoneId);
+        return new CrsCrbtManager(phoneId, this);
+    }
+
+    /*package private*/
+    ICrsCrbtController getCrsCrbtController(int phoneId)
+            throws QtiImsException {
+        validateInvariants(phoneId);
+        try {
+            return mQtiImsExt.getCrsCrbtController(phoneId);
+        } catch(RemoteException e) {
+            throw new QtiImsException("Failed to retrieve CrsCrbtInterface : " + e);
+        }
+    }
+
+    public void queryCallForwardStatus(int phoneId, int reason, int serviceClass,
+            boolean expectMore, IQtiImsExtListener listener) throws QtiImsException {
+        validateInvariants(phoneId);
+        try {
+            mQtiImsExt.queryCallForwardStatus(phoneId, reason, serviceClass, expectMore, listener);
+        } catch(RemoteException e) {
+            throw new QtiImsException("Remote ImsService queryCallForwardStatus : " + e);
+        }
+    }
+
+    public void queryCallBarring(int phoneId, int cbType, String password, int serviceClass,
+            boolean expectMore, IQtiImsExtListener listener) throws QtiImsException {
+        validateInvariants(phoneId);
+        try {
+            mQtiImsExt.queryCallBarring(phoneId, cbType, password, serviceClass, expectMore,
+                    listener);
+        } catch(RemoteException e) {
+            throw new QtiImsException("Remote ImsService queryCallBarring : " + e);
+        }
+    }
+
+    public void exitScbm(int phoneId, IQtiImsExtListener listener)
+            throws QtiImsException {
+        validateInvariants(phoneId);
+        try {
+            mQtiImsExt.exitScbm(phoneId, listener);
+        } catch (RemoteException e) {
+            throw new QtiImsException("Remote ImsService exitScbm: " + e);
+        }
+    }
+
+    public boolean isExitScbmFeatureSupported(int phoneId)
+            throws QtiImsException {
+        validateInvariants(phoneId);
+        try {
+            return mQtiImsExt.isExitScbmFeatureSupported(phoneId);
+        } catch (RemoteException e) {
+            throw new QtiImsException("Remote ImsService isExitScbmFeatureSupported: " + e);
+        }
+    }
+
 }

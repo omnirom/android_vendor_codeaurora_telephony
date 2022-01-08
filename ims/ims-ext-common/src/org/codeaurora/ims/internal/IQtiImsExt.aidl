@@ -1,4 +1,4 @@
-/* Copyright (c) 2015-2017, 2019-2020 The Linux Foundation. All rights reserved.
+/* Copyright (c) 2015-2017, 2019-2021 The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,6 +29,7 @@
 package org.codeaurora.ims.internal;
 
 import android.os.Bundle;
+import org.codeaurora.ims.internal.ICrsCrbtController;
 import org.codeaurora.ims.internal.IQtiImsExtListener;
 import org.codeaurora.ims.internal.IImsMultiIdentityInterface;
 import org.codeaurora.ims.internal.IImsScreenShareController;
@@ -282,4 +283,62 @@ interface IQtiImsExt {
      *@throws RemoteException if calling the IMS service results in an error.
      */
     boolean isCallComposerEnabled(int phoneId);
+
+   /**
+    * Returns the ICrsCrbtnterface IBinder
+    */
+    ICrsCrbtController getCrsCrbtController(int phoneId);
+
+   /**
+     * queryCallForwardStatus
+     * gets a call forwarding option.
+     *
+     * @param phoneId indicates the phone instance which triggered the request
+     * @param reason is one of the valid call forwarding
+     *        CF_REASONS, as defined in
+     *        <code>com.android.internal.telephony.CommandsInterface.</code>
+     * @param serviceClass is service class, that is used to get CFT
+     *        SERVICE_CLASS, as defined in
+     *        <code>com.android.internal.telephony.CommandsInterface.</code>
+     * @param listener an IQtiImsExtListener instance to indicate the response
+     * @param expectMore flag to indicate call forward callforward requests are in line.
+     * @return void
+     */
+    oneway void queryCallForwardStatus(int phoneId, int reason, int serviceClass,
+            boolean expectMore, IQtiImsExtListener listener);
+
+
+    /**
+     * Retrieves the configuration of the call barring for specified service class.
+     *
+     * @param cbType type of call barring to be queried; ImsUtInterface#CB_XXX
+     * @param result message to pass the result of this operation
+     *      The return value of ((AsyncResult)result.obj) is an array of {@link ImsSsInfo}.
+     * @param serviceClass service class for e.g. voice/video
+     * @param expectMore flag to indicate call forward callbarring requests are in line.
+     */
+    oneway void queryCallBarring(int phoneId, int cbType, String password, int serviceClass,
+            boolean expectMore, IQtiImsExtListener listener);
+
+    /**
+      * exitScbm
+      * Exit SCBM mode
+      *
+      * @param phoneId indicates the phone instance which triggered the request
+      * @param listener an IQtiImsExtListener instance to indicate the response
+      * @return boolean request got success or not
+      *
+      * @throws RemoteException if calling the IMS service results in an error.
+      */
+     oneway void exitScbm(int phoneId, IQtiImsExtListener listener);
+
+    /**
+      * Checks whether the SCBM exit feature is supported.
+      *
+      * @param phoneId indicates the phone instance which triggered the request
+      * @return boolean request got success or not
+      *
+      * @throws RemoteException if calling the IMS service results in an error.
+      */
+     boolean isExitScbmFeatureSupported(int phoneId);
 }
