@@ -24,6 +24,40 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Changes from Qualcomm Innovation Center are provided under the following license:
+ *
+ * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted (subject to the limitations in the
+ * disclaimer below) provided that the following conditions are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ *
+ *   * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+ * GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+ * HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+ * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 package org.codeaurora.ims;
@@ -91,6 +125,9 @@ public class QtiCallConstants {
     /* Call fail error code for Retry CS call*/
     public static final int CALL_FAIL_EXTRA_CODE_CALL_CS_RETRY_REQUIRED =
             ImsReasonInfo.CODE_LOCAL_CALL_CS_RETRY_REQUIRED;
+
+    public static final String SIMLESS_RTT_DOWNGRADE_SUPPORTED = "simless_rtt_downgrade_supported";
+    public static final String SIMLESS_RTT_SUPPORTED = "simless_rtt_supported";
 
     /* Calls are rejected due to low battery */
     public static final int CALL_FAIL_EXTRA_CODE_LOCAL_LOW_BATTERY =
@@ -324,20 +361,46 @@ public class QtiCallConstants {
     public static final int QTI_CONFIG_VVM_APP = 1002;
     public static final int QTI_CONFIG_VOWIFI_ROAMING_MODE_PREFERENCE = 1003;
     public static final int CALL_COMPOSER_MODE = 1004;
+    public static final int B2C_ENRICHED_CALLING_MODE = 1005;
+    public static final int DATA_CHANNEL_MODE = 1006;
+    /**
+     * An integer key representing the voice over LTE (VoLTE) provisioning restriction status for
+     * home network for the associated subscription.
+     * Use {@link #PROVISIONING_VALUE_ENABLED} to enable VoLTE provisioning restriction and
+     * {@link #PROVISIONING_VALUE_DISABLED} to disable VoLTE provisioning restriction.
+     * @see #setProvisioningIntValue(int, int)
+     * @see #getProvisioningIntValue(int)
+     */
+    public static final int VOLTE_PROVISIONING_RESTRICT_HOME = 1007;
 
     /**
-     * Key values for the Call Composer elements
+     * An integer key representing the voice over LTE (VoLTE) provisioning restriction status for
+     * roaming network for the associated subscription.
+     * Use {@link #PROVISIONING_VALUE_ENABLED} to enable VoLTE provisioning restriction and
+     * {@link #PROVISIONING_VALUE_DISABLED} to disable VoLTE provisioning restriction.
+     * @see #setProvisioningIntValue(int, int)
+     * @see #getProvisioningIntValue(int)
      */
-    // Intent action broadcasted when call composer elements are available for MT
-    public static final String ACTION_CALL_COMPOSER_INFO =
-            "org.codeaurora.intent.action.CALL_COMPOSER_INFO";
-    // set for MT call composer call (unique ID to match each call)
-    // Type: int
-    public static String EXTRA_CALL_COMPOSER_TOKEN = "call_composer_token";
+    public static final int VOLTE_PROVISIONING_RESTRICT_ROAMING = 1008;
 
-    // set for MT call composer call (only set when the call has ended)
+    /**
+     * Key values for the pre alerting call elements
+     */
+    // Intent action broadcasted when pre alerting call elements are available for MT
+    public static final String ACTION_PRE_ALERTING_CALL_INFO =
+            "org.codeaurora.intent.action.PRE_ALERTING_CALL_INFO";
+    // Set for MT pre alerting call (unique ID to match each call)
+    // Type: int
+    public static String EXTRA_PRE_ALERTING_CALL_TOKEN = "pre_alerting_call_token";
+    public static final int INVALID_TOKEN = -1;
+
+    // Set for MT pre alerting call (unique ID to match subscription)
+    // Type: int
+    public static final String EXTRA_PRE_ALERTING_CALL_PHONE_ID = "pre_alerting_call_phoneId";
+
+    // Set for MT pre alerting call (only set when the call has ended)
     // Type: boolean
-    public static String EXTRA_CALL_COMPOSER_CALL_ENDED = "call_composer_call_ended";
+    public static String EXTRA_PRE_ALERTING_CALL_ENDED = "pre_alerting_call_ended";
 
     // set for call composer call
     public static String EXTRA_CALL_COMPOSER_INFO = "call_composer_info";
@@ -371,6 +434,30 @@ public class QtiCallConstants {
     public static String EXTRA_CALL_COMPOSER_LOCATION_LONGITUDE =
             "call_composer_location_longitude";
 
+    // Get when organization header is added to call composer call
+    // Type: String
+    public static final String EXTRA_CALL_COMPOSER_ORGANIZATION_HEADER =
+            "call_composer_organization_header";
+
+    // Set for eCnam info
+    public static String EXTRA_CALL_ECNAM = "call_ecnam";
+
+    // Set when ecnam display name is added
+    // Type: String
+    public static final String EXTRA_CALL_ECNAM_DISPLAY_NAME = "call_ecnam_display_name";
+
+    // Set when ecnam icon url is added
+    // Type: parcelable Uri
+    public static final String EXTRA_CALL_ECNAM_ICON = "call_ecnam_icon";
+
+    // Set when ecnam info url is added
+    // Type: parcelable Uri
+    public static final String EXTRA_CALL_ECNAM_INFO = "call_ecnam_info";
+
+    // Set when ecnam card url is added
+    // Type: parcelable Uri
+    public static final String EXTRA_CALL_ECNAM_CARD = "call_ecnam_card";
+
     /**
      * User setting to control whether dialing call composer calls are allowed
      * Type: int (0 for disable, 1 for enabled);
@@ -378,6 +465,22 @@ public class QtiCallConstants {
     public static final String IMS_CALL_COMPOSER = "qti.settings.call_composer";
     public static final int CALL_COMPOSER_DISABLED = 0;
     public static final int CALL_COMPOSER_ENABLED = 1;
+
+    /**
+     * User setting to control whether b2c enriched calling is allowed
+     * Type: int (0 for disable, 1 for enabled);
+     */
+    public static final String B2C_ENRICHED_CALLING = "qti.settings.b2c_enriched_calling";
+    public static final int B2C_ENRICHED_CALLING_DISABLED = 0;
+    public static final int B2C_ENRICHED_CALLING_ENABLED = 1;
+
+    /**
+     * User setting to control whether ims data channel is allowed
+     * Type: int (0 for disable, 1 for enabled);
+     */
+    public static final String DATA_CHANNEL = "qti.settings.data_channel";
+    public static final int DATA_CHANNEL_DISABLED = 0;
+    public static final int DATA_CHANNEL_ENABLED = 1;
 
     /**
      * Constants used by clients as part of registration status change indication.
@@ -400,6 +503,8 @@ public class QtiCallConstants {
     public static final String EXTRA_ORIGINAL_CALL_TYPE = "originalCallType";
     /* Slience UI before CRS RTP come extra key */
     public static final String EXTRA_IS_PREPARATORY = "isPreparatory";
+    /* Ims vendor callId extra key */
+    public static final String EXTRA_IMS_CALL_ID = "callId";
     //INVALID if CrsData is invalid, play local ring.
     public static final int CRS_TYPE_INVALID = 0;
     //AUDIO if only audio will be played.
@@ -445,4 +550,7 @@ public class QtiCallConstants {
      *  - activate CFx before register operation
      *  - query CFNL while network does not support CFNL feature */
     public static final int CODE_UT_CF_SERVICE_NOT_REGISTERED = 850;
+    // Data Channel call information
+    public static final String EXTRA_DATA_CHANNEL_MODEM_CALL_ID = "modemCallId";
+    public static final String EXTRA_IS_DATA_CHANNEL_CALL = "isDcCall";
 }

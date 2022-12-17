@@ -25,6 +25,40 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Changes from Qualcomm Innovation Center are provided under the following license:
+ *
+ * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted (subject to the limitations in the
+ * disclaimer below) provided that the following conditions are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   * Redistributions in binary form must reproduce the above
+ *     copyright notice, this list of conditions and the following
+ *     disclaimer in the documentation and/or other materials provided
+ *     with the distribution.
+ *
+ *   * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+ * GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+ * HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+ * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 package org.codeaurora.ims.utils;
@@ -166,6 +200,10 @@ public class QtiImsExtUtils {
     public static final int QTI_IMS_TIR_PRESENTATION_RESTRICTED = 1;
     public static final int QTI_IMS_TIR_PRESENTATION_DEFAULT = 2;
 
+    /*RTT downgrade not supported */
+    public static final int QTI_IMS_RTT_DOWNGRADE_NOT_SUPPORTED = 0;
+    /*RTT upgrade not supported */
+    public static final int QTI_IMS_RTT_NOT_SUPPORTED = 0;
 
     /**
      * Private constructor for QtiImsExtUtils as we don't want to instantiate this class
@@ -668,6 +706,26 @@ public class QtiImsExtUtils {
             CarrierConfigManager.KEY_RTT_DOWNGRADE_SUPPORTED_BOOL);
     }
 
+    // Returns true if previous carrier supported RTT downgrade
+    // False otherwise
+    public static boolean isSimlessRttDowgradeSupported(int phoneId, Context context) {
+        int simLessRttDowngradeSupportedValue = android.provider.Settings.Secure.getInt(
+                context.getContentResolver(), QtiCallConstants.
+                SIMLESS_RTT_DOWNGRADE_SUPPORTED + convertRttPhoneId(phoneId),
+                QTI_IMS_RTT_DOWNGRADE_NOT_SUPPORTED);
+        return simLessRttDowngradeSupportedValue != QTI_IMS_RTT_DOWNGRADE_NOT_SUPPORTED;
+    }
+
+    // Returns true if previous carrier supported RTT upgrade
+    // False otherwise
+    public static boolean isSimlessRttSupported(int phoneId, Context context) {
+        int simLessRttSupportedValue = android.provider.Settings.Secure.getInt(
+                context.getContentResolver(), QtiCallConstants.
+                SIMLESS_RTT_SUPPORTED + convertRttPhoneId(phoneId),
+                QTI_IMS_RTT_NOT_SUPPORTED);
+        return simLessRttSupportedValue != QTI_IMS_RTT_NOT_SUPPORTED;
+    }
+
     // Returns true if Carrier support RTT visibility setting
     // False otherwise
     public static boolean shallShowRttVisibilitySetting(int phoneId, Context context) {
@@ -735,6 +793,28 @@ public class QtiImsExtUtils {
                 QtiCallConstants.CALL_COMPOSER_DISABLED);
     }
 
+    // Returns true if Carrier supports B2C Enriched Calling
+    public static boolean isB2cEnrichedCallingSupported(int phoneId, Context context) {
+        return isCarrierConfigEnabled(phoneId, context,
+                QtiCarrierConfigs.KEY_CARRIER_B2C_ENRICHED_CALLING_SUPPORTED);
+    }
+
+    // Stores user setting for B2C Enriched Calling
+    public static void setB2cEnrichedCallingMode(ContentResolver contentResolver, int phoneId,
+            boolean turnOn) {
+        final int value = turnOn ? QtiCallConstants.B2C_ENRICHED_CALLING_ENABLED :
+                QtiCallConstants.B2C_ENRICHED_CALLING_DISABLED;
+        android.provider.Settings.Global.putInt(contentResolver,
+                QtiCallConstants.B2C_ENRICHED_CALLING + phoneId, value);
+    }
+
+    // retrieves the stored user setting from the database per phone id
+    public static int getB2cEnrichedCallingMode(ContentResolver contentResolver, int phoneId) {
+        return android.provider.Settings.Global.getInt(contentResolver,
+                QtiCallConstants.B2C_ENRICHED_CALLING + phoneId,
+                QtiCallConstants.B2C_ENRICHED_CALLING_DISABLED);
+    }
+
     // Sets RTT Operation Mode to global settings
     // Takes a phoneId to support DSDS configuration.
     public static void setRttOperatingMode(ContentResolver contentResolver, int phoneId,
@@ -778,5 +858,28 @@ public class QtiImsExtUtils {
     public static boolean isSendMediaConfigurationSupported(int phoneId, Context context) {
         return isCarrierConfigEnabled(phoneId, context,
                 QtiCarrierConfigs.KEY_CARRIER_SEND_MEDIA_CONFIG_SUPPORTED);
+    }
+
+    // Returns true if Carrier supports data channel
+    public static boolean isDataChannelSupported(int phoneId, Context context) {
+        return isCarrierConfigEnabled(phoneId, context,
+                QtiCarrierConfigs.KEY_CARRIER_DATA_CHANNEL_SUPPORTED);
+    }
+
+    // Stores user setting for data channel
+    public static void setDataChannelUserPreference(ContentResolver contentResolver,
+            int phoneId, boolean turnOn) {
+        final int value = turnOn ? QtiCallConstants.DATA_CHANNEL_ENABLED :
+                QtiCallConstants.DATA_CHANNEL_DISABLED;
+        android.provider.Settings.Global.putInt(contentResolver,
+                QtiCallConstants.DATA_CHANNEL + phoneId, value);
+    }
+
+    // retrieves the stored user setting from the database per phone id
+    public static int getDataChannelUserPreference(ContentResolver contentResolver,
+            int phoneId) {
+        return android.provider.Settings.Global.getInt(contentResolver,
+                QtiCallConstants.DATA_CHANNEL + phoneId,
+                QtiCallConstants.DATA_CHANNEL_DISABLED);
     }
 }
